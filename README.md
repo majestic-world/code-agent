@@ -2,22 +2,24 @@
 
 Skills de agents e extensões (plugins) do omp.
 
-- `skills/`: skills de agents.
-- `omp-extensions/`: extensões do omp.
+## Instalação
 
-## Instalando as skills
+Abra o destino com `Win + R` e copie:
 
-1. Pressione `Win + R` para abrir **Executar**, cole `%USERPROFILE%\.agents\skills` e pressione `Enter`.
-2. Copie a pasta de cada skill de `skills/` para esse destino, mantendo o arquivo `SKILL.md` e os demais arquivos dentro da pasta da skill.
+| Origem | Destino |
+| --- | --- |
+| Pastas de `skills/` | `%USERPROFILE%\.agents\skills\` |
+| Arquivos de `omp-extensions/*.ts` | `%USERPROFILE%\.omp\agent\extensions\` |
 
-Exemplo: `skills/create-plan/` deve ficar em `%USERPROFILE%\.agents\skills\create-plan\`.
+Reinicie o omp após instalar extensões.
 
-## Instalando as extensões (plugins)
+## writing-for-agents
 
-1. Pressione `Win + R` para abrir **Executar**, cole `%USERPROFILE%\.omp\agent\extensions` e pressione `Enter`.
-2. Copie os arquivos `.ts` de `omp-extensions/` para esse destino.
-3. Reinicie o omp.
+Regras-base para enviar ao agent com a skill `writing-for-agents`:
 
-Exemplo: `omp-extensions/turn-time.ts` deve ficar em `%USERPROFILE%\.omp\agent\extensions\turn-time.ts`.
-
-> `%USERPROFILE%` aponta para a pasta do seu usuário, como `C:\Users\SeuNome`. Se uma pasta de destino ainda não existir, crie-a antes de copiar os arquivos.
+```text
+- Escreva código e comentários em inglês; responda ao usuário em pt-BR.
+- Faça commit apenas a pedido do usuário ou por instrução explícita de uma skill invocada manualmente.
+- Use Conventional Commits com a descrição em pt-BR.
+- Flexione conforme a quantidade: `1 classe`, `2 classes`, em vez de `classe(s)`.
+```
