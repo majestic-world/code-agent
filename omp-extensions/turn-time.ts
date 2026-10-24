@@ -86,15 +86,15 @@ export default function turnTime(pi) {
       }
       const details: TurnDetails = { elapsedMs: endedAt - startedAt, ...usage };
       startedAt = undefined;
-      // Sent only while idle: the default delivery then appends and displays
-      // without starting a turn (while streaming it would steer instead).
+      // Idle nextTurn delivery persists the marker and appends it to the UI
+      // without starting a turn or rebuilding the entire transcript.
       void pi.sendMessage({
         customType: CUSTOM_TYPE,
         content: `${CLOCK_ICON} ${formatElapsed(details.elapsedMs)}  ${formatLine(details, { input: "in", output: "out", cache: "cache" })}`,
         display: true,
         details,
         attribution: "agent",
-      });
+      }, { deliverAs: "nextTurn" });
     };
     cancelPending(ctx);
     pendingCheck = ctx.setTimeout(check, 0);

@@ -13,6 +13,8 @@ Abra o destino com `Win + R` e copie:
 
 Reinicie o omp após instalar extensões.
 
+`turn-time.ts`: exibe duração e tokens ao fim do turno com inserção incremental, sem reconstruir o histórico.
+
 ## writing-for-agents
 
 Regras-base para enviar ao agent com a skill `writing-for-agents`:
