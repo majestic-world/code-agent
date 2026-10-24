@@ -1,0 +1,7 @@
+interface:
+  display_name: "Clean Repository"
+  short_description: "Limpa a .scratch preservando conhecimento útil"
+  default_prompt: "Use $clean-repository para revisar a .scratch, preservar apenas conhecimento duradouro na documentação do projeto, debater as decisões com um subagente e excluir a pasta sem criar commit."
+
+policy:
+  allow_implicit_invocation: false
