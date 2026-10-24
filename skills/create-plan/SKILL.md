@@ -49,3 +49,12 @@ Antes de entregar, confira que todo item solicitado aparece na solução e nos c
 Publique o plano completo na resposta, no idioma do usuário, preservando decisões e respostas para a próxima etapa. Não substitua o conteúdo por um link e não crie arquivos de plano por padrão; salve-os somente se solicitado.
 
 Se não houver decisão bloqueante, indique que o plano está pronto para o usuário chamar `/to-spec`, sem exigir uma rodada genérica de aprovação. Caso ainda exista um bloqueio, entregue a parte consolidada e destaque exatamente a decisão pendente, sem declarar o plano pronto. A próxima skill mantém seu próprio fluxo; este plano não equivale à aprovação de ações ou recomendações ainda não aprovadas.
+
+## Registre a continuidade do fluxo
+
+Ao final da resposta que entrega o plano, inclua uma orientação explícita para a próxima etapa: o caminho natural é o usuário invocar `/to-spec`. Registre na própria conversa que, ao concluir a spec, o agente deve recomendar um dos caminhos abaixo, justificando a escolha com base no escopo, nas dependências e na possibilidade de executar e validar o trabalho em um único contexto:
+
+- **`/implement` direto:** quando a spec representar uma entrega coesa, de escopo controlado, que possa ser implementada e validada em um único contexto, sem benefício concreto em separar tickets.
+- **`/to-tickets` → `/implement-spec`:** quando houver múltiplas entregas verificáveis, dependências que precisem ser coordenadas ou volume de trabalho que exija vários contextos. Os tickets devem permitir fatias executáveis e verificáveis; `implement-spec` executa a spec a partir desse conjunto de tickets.
+
+Deixe a recomendação definitiva para depois da síntese da spec por `to-spec`; o encerramento de `create-plan` deve carregar essa instrução para o agente que continuar a conversa. Recomendar o caminho não autoriza invocar essas skills automaticamente.
