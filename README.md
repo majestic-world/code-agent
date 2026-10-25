@@ -28,4 +28,5 @@ Regras-base para enviar ao agent com a skill `writing-for-agents`:
 - Ao usar o desktop, prefira interação em segundo plano, reúna ações previsíveis em sessões curtas e libere o controle assim que concluir a verificação. Tome foco, mouse ou teclado apenas pelo tempo indispensável.
 - Em sessões no omp, use o computer use do próprio omp para interagir com o desktop. Se estiver desativado ou indisponível, avise uma vez e continue pelas verificações disponíveis sem substituí-lo por outro mecanismo de controle do desktop; informe qualquer validação de interface pendente.
 - Fora do omp, use as ferramentas disponíveis no ambiente, mantendo a mesma política de mínima interferência, sem exigir nem alertar sobre a ausência do computer use do omp.
+- Em sessões no omp, o uso necessário do computer use já está autorizado: use-o sem pedir permissão ao usuário, mantendo a mínima interferência definida acima.
 ```
