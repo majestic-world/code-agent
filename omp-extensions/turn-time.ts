@@ -1,6 +1,6 @@
 // Shows the total prompt-to-yield time and token usage in the footer after the
 // agent finishes a turn, instead of changing the conversation transcript.
-import { Text } from "@oh-my-pi/pi-tui";
+import { Container, Spacer, Text } from "@oh-my-pi/pi-tui";
 
 const CUSTOM_TYPE = "local.turn-time";
 const STATUS_KEY = "turn-time";
@@ -59,7 +59,7 @@ export default function turnTime(pi) {
       cancelPending(ctx);
       return;
     }
-    ctx.ui.setStatus(STATUS_KEY, undefined);
+    ctx.ui.setWidget(STATUS_KEY, undefined);
     startedAt = Date.now();
     usage = { input: 0, output: 0, cacheRead: 0 };
   });
@@ -88,7 +88,13 @@ export default function turnTime(pi) {
       const details: TurnDetails = { elapsedMs: endedAt - startedAt, ...usage };
       startedAt = undefined;
       const line = `${formatElapsed(details.elapsedMs)}  ${formatLine(details, ctx.ui.theme.icon)}`;
-      ctx.ui.setStatus(STATUS_KEY, `${CLOCK_ICON} ${ctx.ui.theme.fg("dim", line)}`);
+      ctx.ui.setWidget(STATUS_KEY, () => {
+        const container = new Container();
+        container.addChild(new Spacer(1));
+        container.addChild(new Text(`${CLOCK_ICON} ${ctx.ui.theme.fg("dim", line)}`, 1, 0));
+        container.addChild(new Spacer(1));
+        return container;
+      }, { placement: "belowEditor" });
     };
     cancelPending(ctx);
     pendingCheck = ctx.setTimeout(check, 0);
@@ -97,7 +103,7 @@ export default function turnTime(pi) {
   pi.on("session_shutdown", (_event, ctx) => {
     startedAt = undefined;
     pendingCheck = undefined;
-    ctx.ui.setStatus(STATUS_KEY, undefined);
+    ctx.ui.setWidget(STATUS_KEY, undefined);
   });
 
   // Display-only: never send the marker to the model.
