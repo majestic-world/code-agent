@@ -1,9 +1,9 @@
-// Shows the total prompt-to-yield time and token usage once, after the agent
-// finishes a turn, instead of on every intermediate assistant message
-// (display.showTokenUsage / display.showTurnTime).
+// Shows the total prompt-to-yield time and token usage in the footer after the
+// agent finishes a turn, instead of changing the conversation transcript.
 import { Text } from "@oh-my-pi/pi-tui";
 
 const CUSTOM_TYPE = "local.turn-time";
+const STATUS_KEY = "turn-time";
 const CLOCK_ICON = "⏳";
 const IDLE_RECHECK_MS = 25;
 const IDLE_RECHECK_MAX_MS = 250;
@@ -59,6 +59,7 @@ export default function turnTime(pi) {
       cancelPending(ctx);
       return;
     }
+    ctx.ui.setStatus(STATUS_KEY, undefined);
     startedAt = Date.now();
     usage = { input: 0, output: 0, cacheRead: 0 };
   });
@@ -86,23 +87,17 @@ export default function turnTime(pi) {
       }
       const details: TurnDetails = { elapsedMs: endedAt - startedAt, ...usage };
       startedAt = undefined;
-      // Idle nextTurn delivery persists the marker and appends it to the UI
-      // without starting a turn or rebuilding the entire transcript.
-      void pi.sendMessage({
-        customType: CUSTOM_TYPE,
-        content: `${CLOCK_ICON} ${formatElapsed(details.elapsedMs)}  ${formatLine(details, { input: "in", output: "out", cache: "cache" })}`,
-        display: true,
-        details,
-        attribution: "agent",
-      }, { deliverAs: "nextTurn" });
+      const line = `${formatElapsed(details.elapsedMs)}  ${formatLine(details, ctx.ui.theme.icon)}`;
+      ctx.ui.setStatus(STATUS_KEY, `${CLOCK_ICON} ${ctx.ui.theme.fg("dim", line)}`);
     };
     cancelPending(ctx);
     pendingCheck = ctx.setTimeout(check, 0);
   });
 
-  pi.on("session_shutdown", () => {
+  pi.on("session_shutdown", (_event, ctx) => {
     startedAt = undefined;
     pendingCheck = undefined;
+    ctx.ui.setStatus(STATUS_KEY, undefined);
   });
 
   // Display-only: never send the marker to the model.
