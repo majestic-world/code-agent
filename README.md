@@ -13,7 +13,7 @@ Abra o destino com `Win + R` e copie:
 
 Reinicie o omp após instalar extensões.
 
-`turn-time.ts`: exibe duração e tokens abaixo do editor ao fim do turno, sem alterar ou reconstruir o histórico.
+`turn-time.ts`: exibe duração e tokens acima do editor ao fim do turno, sem alterar ou reconstruir o histórico.
 
 ## writing-for-agents
 

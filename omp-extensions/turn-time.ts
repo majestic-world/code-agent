@@ -1,6 +1,6 @@
-// Shows the total prompt-to-yield time and token usage in the footer after the
-// agent finishes a turn, instead of changing the conversation transcript.
-import { Container, Spacer, Text } from "@oh-my-pi/pi-tui";
+// Shows the total prompt-to-yield time and token usage above the editor after
+// the agent finishes a turn, instead of changing the conversation transcript.
+import { Text } from "@oh-my-pi/pi-tui";
 
 const CUSTOM_TYPE = "local.turn-time";
 const STATUS_KEY = "turn-time";
@@ -88,13 +88,11 @@ export default function turnTime(pi) {
       const details: TurnDetails = { elapsedMs: endedAt - startedAt, ...usage };
       startedAt = undefined;
       const line = `${formatElapsed(details.elapsedMs)}  ${formatLine(details, ctx.ui.theme.icon)}`;
-      ctx.ui.setWidget(STATUS_KEY, () => {
-        const container = new Container();
-        container.addChild(new Spacer(1));
-        container.addChild(new Text(`${CLOCK_ICON} ${ctx.ui.theme.fg("dim", line)}`, 1, 0));
-        container.addChild(new Spacer(1));
-        return container;
-      }, { placement: "belowEditor" });
+      ctx.ui.setWidget(
+        STATUS_KEY,
+        () => new Text(`${CLOCK_ICON} ${ctx.ui.theme.fg("dim", line)}`, 1, 0),
+        { placement: "aboveEditor" },
+      );
     };
     cancelPending(ctx);
     pendingCheck = ctx.setTimeout(check, 0);
