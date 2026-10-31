@@ -13,6 +13,22 @@ omp plugin install egm@egm
 
 Inicie uma nova sessão do OMP após a instalação. Instale o plugin completo: copiar apenas `skills/` não inclui os agentes e documentos necessários.
 
+## Atualização
+
+Para atualizar o plugin:
+
+```powershell
+omp plugin upgrade egm@egm
+```
+
+Para verificar o que seria feito sem alterar a instalação:
+
+```powershell
+omp plugin upgrade egm@egm --dry-run
+```
+
+Inicie uma nova sessão do OMP após a atualização.
+
 ## Criar um app ou uma feature
 
 Abra o OMP na pasta do projeto. Para um app novo, use uma pasta vazia. Para uma feature, use a pasta do projeto existente.
