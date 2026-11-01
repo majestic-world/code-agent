@@ -15,6 +15,8 @@ Reinicie o omp após instalar extensões.
 
 `turn-time.ts`: exibe duração e tokens acima do editor ao fim do turno, sem alterar ou reconstruir o histórico.
 
+`endpoint.ts`: adiciona `/endpoint` para cadastrar modelos OpenAI-compatible, descobrir modelos do LM Studio, atualizar a lista e excluir cadastros. Consulte [OMP_ENDPOINT_LOGIN.md](OMP_ENDPOINT_LOGIN.md).
+
 ## writing-for-agents
 
 Regras-base para enviar ao agent com a skill `writing-for-agents`:
