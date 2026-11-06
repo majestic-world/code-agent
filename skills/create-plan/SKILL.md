@@ -52,9 +52,6 @@ Se não houver decisão bloqueante, indique que o plano está pronto para o usu�
 
 ## Registre a continuidade do fluxo
 
-Ao final da resposta que entrega o plano, inclua uma orientação explícita para a próxima etapa: o caminho natural é o usuário invocar `/to-spec`. Registre na própria conversa que, ao concluir a spec, o agente deve recomendar um dos caminhos abaixo, justificando a escolha com base no escopo, nas dependências e na possibilidade de executar e validar o trabalho em um único contexto:
+Ao entregar o plano, indique que o próximo passo natural é o usuário invocar `/to-spec`. Registre na conversa que, ao concluir a spec, o agente deve recomendar `/implement-plan-spec` como entrada única de implementação.
 
-- **`/implement` direto:** quando a spec representar uma entrega coesa, de escopo controlado, que possa ser implementada e validada em um único contexto, sem benefício concreto em separar tickets.
-- **`/to-tickets` → `/implement-spec`:** quando houver múltiplas entregas verificáveis, dependências que precisem ser coordenadas ou volume de trabalho que exija vários contextos. Os tickets devem permitir fatias executáveis e verificáveis; `implement-spec` executa a spec a partir desse conjunto de tickets.
-
-Deixe a recomendação definitiva para depois da síntese da spec por `to-spec`; o encerramento de `create-plan` deve carregar essa instrução para o agente que continuar a conversa. Recomendar o caminho não autoriza invocar essas skills automaticamente.
+`implement-plan-spec` executa na branch atual, decide se precisa de tickets e, quando necessário, cria-os antes de implementar. A granularidade depende do escopo, das dependências e da necessidade de vários contextos; essa decisão pertence à execução, sem exigir que o usuário escolha outra skill. Recomendar a próxima etapa não autoriza invocá-la automaticamente.
