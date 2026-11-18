@@ -12,7 +12,9 @@ O nome gerado é `lm-studio`. Para renomear um cadastro anterior, use `/endpoint
 
 `lm-studio` também é um provedor nativo do OMP: a descoberta nativa pode adicionar modelos à lista, inclusive embeddings, e fazer um modelo excluído reaparecer mesmo sem atualizar pela extensão.
 
-O menu também permite cadastrar outros endpoints OpenAI-compatible com descoberta automática ou inserir um modelo manualmente. Para endpoints autenticados, informe **o nome da variável de ambiente**, não a chave; a descoberta exige que a variável já esteja definida no processo do OMP.
+Para a Venice AI, escolha **Cadastrar e buscar modelos**, informe um ID como `venice-custom`, use `https://api.venice.ai/api/v1` e selecione **openai-completions** → **Chave de API**. Cole a chave sem o prefixo `Bearer`. Ela fica visível durante a digitação e, se você confirmar o cadastro, é salva em texto puro no YAML do perfil. Reinicie o OMP e escolha `venice-custom/<modelo>` em `/model`.
+
+Se preferir não gravar a chave no YAML, escolha **Variável de ambiente** e informe apenas o nome da variável. Ela precisa estar definida no processo do OMP antes da busca. Os dois modos também estão disponíveis no cadastro manual.
 
 Para atualizar, execute `/endpoint` → **Atualizar modelos** e escolha o provedor. O resumo mostra modelos adicionados e removidos antes de confirmar. Para remover, escolha **Excluir modelo ou provedor**. Um modelo excluído voltará a ser cadastrado na próxima atualização se o servidor ainda o listar; excluir o provedor não remove os arquivos de modelo do LM Studio.
 
@@ -76,7 +78,7 @@ Ou crie `~/.omp/agent/.env`:
 MEU_PROVEDOR_API_KEY=sk-sua-chave
 ```
 
-Não grave a chave diretamente no `models.yml`.
+Com esta configuração por variável de ambiente, mantenha apenas o nome da variável no `models.yml`.
 
 ## 4. Teste
 

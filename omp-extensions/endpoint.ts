@@ -51,21 +51,27 @@ function positiveInteger(value: unknown): number | undefined {
   return typeof value === "number" && Number.isSafeInteger(value) && value > 0 ? value : undefined;
 }
 
+function validLiteralKey(value: string): boolean {
+  return /^[\x21-\x7e]+$/.test(value) && !value.startsWith("!");
+}
+
 async function discoverModels(provider: ProviderConfig): Promise<{ models: ModelConfig[]; fallback: number }> {
   const base = new URL(provider.baseUrl.endsWith("/") ? provider.baseUrl : `${provider.baseUrl}/`);
   if (!["http:", "https:"].includes(base.protocol) || base.username || base.password || base.search || base.hash) throw new Error("URL base inválida.");
   const headers: Record<string, string> = {};
   if (provider.auth !== "none") {
     const key = provider.apiKey;
-    if (!key || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(key) || !process.env[key]) throw new Error("Defina a variável de ambiente da chave antes de buscar modelos. Chaves literais e comandos não são usados pela extensão.");
-    headers.Authorization = `Bearer ${process.env[key]}`;
+    if (!key || !validLiteralKey(key)) throw new Error("Chave ausente ou inválida; comandos não são aceitos.");
+    const token = process.env[key] || (provider.auth === "apiKey" ? key : undefined);
+    if (!token) throw new Error("Defina a variável de ambiente da chave antes de buscar modelos.");
+    headers.Authorization = `Bearer ${token}`;
   }
   const response = await fetch(new URL("models", base), { headers, signal: AbortSignal.timeout(10000), redirect: "error" });
   if (!response.ok) throw new Error(`Falha ao consultar /models: HTTP ${response.status}.`);
   const body = await response.json() as { data?: unknown };
   if (!body || !Array.isArray(body.data)) throw new Error("Resposta /models inválida: esperado um array data.");
   const nativeUrl = new URL(base);
-  nativeUrl.pathname = nativeUrl.pathname.replace(/\/v1\/$/, "/api/v1/models");
+  if (!base.pathname.endsWith("/api/v1/")) nativeUrl.pathname = base.pathname.replace(/\/v1\/$/, "/api/v1/models");
   const native = new Map<string, any>();
   if (nativeUrl.pathname !== base.pathname) {
     try {
@@ -142,14 +148,19 @@ export default function endpointExtension(pi) {
           if (Object.hasOwn(file.providers, provider)) throw new Error(`O provedor '${provider}' já existe; use Atualizar modelos.`);
           const api = quick ? "openai-completions" : await ctx.ui.select("API compatível", ["openai-completions", "openai-responses"]);
           if (!api) return;
-          const auth = quick ? "Sem autenticação" : await ctx.ui.select("Autenticação", ["Sem autenticação", "Variável de ambiente"]);
+          const auth = quick ? "Sem autenticação" : await ctx.ui.select("Autenticação", ["Sem autenticação", "Variável de ambiente", "Chave de API"]);
           if (!auth) return;
           let envName: string | undefined;
           if (auth === "Variável de ambiente") {
             envName = await input("Nome da variável de ambiente (não a chave)", v => /^[A-Za-z_][A-Za-z0-9_]*$/.test(v), "Informe um nome de variável válido, não a chave.");
             if (!envName) return;
           }
-          const config: ProviderConfig = { baseUrl: url, api, ...(envName ? { apiKey: envName, authHeader: true } : { auth: "none" }) };
+          let literal: string | undefined;
+          if (auth === "Chave de API") {
+            literal = await input("Chave de API (visível na entrada; salva em texto puro no YAML ao confirmar)", v => validLiteralKey(v) && !process.env[v], "Informe a chave literal, sem espaços, comandos ou referência a variável de ambiente.");
+            if (!literal) return;
+          }
+          const config: ProviderConfig = { baseUrl: url, api, ...(literal ? { auth: "apiKey", apiKey: literal, authHeader: true } : envName ? { apiKey: envName, authHeader: true } : { auth: "none" }) };
           if (action === "Cadastrar e buscar modelos" || quick) {
             ctx.ui.notify("Consultando modelos do endpoint...", "info");
             const result = await discoverModels(config);
